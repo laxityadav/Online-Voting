@@ -1,0 +1,52 @@
+<% layout('./boilerplate')%>
+
+    <div class="row">
+        <h1 class="text-center">New Voting</h1>
+        <div class="col-md-6 offset-md-3">
+            <form action="/voteform" method="POST" novalidate class="validated-form">
+                <div class="mb-3">
+                    <label class="form-label" for="candidate1">Candidate 1 Name</label>
+                    <input class="form-control" type="text" id="candidate1" name="candidate1" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="desc1">Candidate 1 Description</label>
+                    <textarea class="form-control" type="text" id="desc1" name="desc1" required></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="candidate2">Candidate 2 Name</label>
+                    <input class="form-control" type="text" id="candidate2" name="candidate2" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="desc2">Candidate 2 Description</label>
+                    <textarea class="form-control" type="text" id="desc2" name="desc2" required></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="duration">Duration of Voting (in minutes)</label>
+                    <input class="form-control" type="number" id="duration" min="1" name="duration" required></input>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <button class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
