@@ -10,6 +10,7 @@ const User = require('./models/user');
 const ExpressError = require('./utils/ExpressError');
 const flash = require('connect-flash');
 const catchAsync = require('./utils/catchAsync');
+const methodOverride = require('method-override');
 
 const { isLoggedIn } = require('./middleware');
 const MongoDBStore = require('connect-mongo')(session);
@@ -35,6 +36,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
@@ -85,12 +87,14 @@ app.get('/', (req, res) => {
     res.render('home');
 });
 
-app.get('/ongoing', (req, res) => {
-    res.render('ongoing');
+app.get('/ongoing', async (req, res) => {
+    const allContest = await Vote.find({});
+    res.render('ongoing', { allContest });
 });
 
-app.get('/result', (req, res) => {
-    res.render('result');
+app.get('/result', async (req, res) => {
+    const allContest = await Vote.find({});
+    res.render('result', { allContest });
 });
 
 app.get('/voteform', isLoggedIn, (req, res) => {
@@ -134,22 +138,47 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
-app.post('/voteform', isLoggedIn, async (req, res) => {
-    const vote = new Vote(req.body);
-    await vote.save();
-    res.json({ vote });
+app.post('/voteform', async (req, res) => {
+    req.body.duration = req.body.duration * 60000;
+
+    const newVote = new Vote(req.body);
+    newVote.endtime = new Date().getTime() + req.body.duration;
+    await newVote.save();
+    console.log(newVote);
+    res.redirect(`/${newVote._id}`);
 });
 
-app.get('/abcd', (req, res) => {
-    let countDownDate = new Date().getTime() + 60 * 1000;
-    let now = new Date().getTime();
-    let diff = countDownDate - now;
-
-    setTimeout(() => {
-        console.log('Backend is executed');
-    }, diff);
+app.get('/:id', isLoggedIn, async (req, res) => {
+    const vote = await Vote.findById(req.params.id);
+    let date = new Date(vote.endtime - vote.duration);
+    let user = await User.findById(req.user);
+    let isVoted = false, winner = '';
+    for (let v of user.voted) {
+        if (v.voteId.toString() === vote._id.toString()) {
+            isVoted = true;
+            winner = v.votedName;
+            break;
+        }
+    }
+    res.render('contest', { vote, date, isVoted, winner });
 });
 
+app.put('/:id/:number', async (req, res) => {
+    const { id, number } = req.params;
+    const vote = await Vote.findById(id);
+    let user = await User.findById(req.user);
+    if (number === '1') {
+        const increaseVote = await Vote.findByIdAndUpdate(id, { voteCount1: vote.voteCount1 + 1 });
+        await increaseVote.save();
+        user.voted.push({ voteId: vote._id, votedName: vote.candidate1 });
+    } else {
+        const increaseVote = await Vote.findByIdAndUpdate(id, { voteCount2: vote.voteCount2 + 1 });
+        await increaseVote.save();
+        user.voted.push({ voteId: vote._id, votedName: vote.candidate2 });
+    }
+    await user.save();
+    res.redirect(`/${req.params.id}`);
+});
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page not found, 400'));

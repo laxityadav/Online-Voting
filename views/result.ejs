@@ -1,3 +1,61 @@
 <% layout('./boilerplate')%>
 
     <h1>This is result page.</h1>
+
+    <% let presenttime=new Date().getTime() %>
+
+        <%for(let ended of allContest) { %>
+            <% if(ended.endtime < presenttime) { %>
+
+                <div class="card mb-5">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="https://res.cloudinary.com/dzex6ikkr/image/upload/v1614521222/YelpCamp/voting2_wlx5fa.png"
+                                class="img-fluid" alt="no image" style="height: 220px">
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%=ended.candidate1%>
+                                </h5>
+                                <p class="card-text">
+                                    <%=ended.desc1%>
+                                </p>
+                                <h5>Votes of <%=ended.candidate1%> = <%=ended.voteCount1%>
+                                </h5>
+                                <% if(ended.voteCount1> ended.voteCount2) { %>
+                                    <h3>The Winner is <%=ended.candidate1%>
+                                    </h3>
+                                    <% } else if(ended.voteCount1 < ended.voteCount2) { %>
+                                        <h3>The Winner is <%=ended.candidate2%>
+                                        </h3>
+                                        <% } else { %>
+                                            <h3>It was a draw
+                                            </h3>
+                                            <% } %>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="card-body">
+                                <h3>VS
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%=ended.candidate2%>
+                                </h5>
+                                <p class="card-text">
+                                    <%=ended.desc2%>
+                                </p>
+                                <h5>Votes of <%=ended.candidate2%> = <%=ended.voteCount2%>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+                    <% } %>

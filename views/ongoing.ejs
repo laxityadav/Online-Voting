@@ -1,3 +1,50 @@
 <% layout('./boilerplate')%>
 
-    <h1>This is ongoing page.</h1>
+    <% let presenttime=new Date().getTime() %>
+
+        <%for(let ongoing of allContest) { %>
+            <% if(ongoing.endtime> presenttime) { %>
+
+                <div class="card mb-5">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="https://res.cloudinary.com/dzex6ikkr/image/upload/v1614521222/YelpCamp/voting2_wlx5fa.png"
+                                class="img-fluid" alt="no image" style="height: 220px">
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%=ongoing.candidate1%>
+                                </h5>
+                                <p class="card-text">
+                                    <%=ongoing.desc1%>
+                                </p>
+                                <h3>Total Votes till now: <%=ongoing.voteCount1 + ongoing.voteCount2%>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="card-body">
+                                <h3>VS
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%=ongoing.candidate2%>
+                                </h5>
+                                <p class="card-text">
+                                    <%=ongoing.desc2%>
+                                </p>
+                            </div>
+                        </div>
+                        <a href="/<%=ongoing._id%>" class="btn btn-primary"
+                            style="width: 150px; margin-left: 500px;">Vote
+                            Now</a>
+                    </div>
+                </div>
+                <% } %>
+                    <% } %>

@@ -1,0 +1,59 @@
+<% layout('./boilerplate')%>
+
+    <% if(isVoted){ %>
+        <h1>You voted <%=winner%>
+        </h1>
+        <% } %>
+            <div class="mt-5">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="https://res.cloudinary.com/dzex6ikkr/image/upload/v1614753214/YelpCamp/blue_mr7fka.webp"
+                                class="card-img-top" alt="no image">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%=vote.candidate1.toUpperCase()%>
+                                </h5>
+                                <p class="card-text">
+                                    <%=vote.desc1%>
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Start Time = <%=date%></small>
+                                <% if(!isVoted) { %>
+                                    <form action="/<%=vote._id%>/1?_method=PUT" method="POST">
+                                        <button class="button btn-primary">Vote</button>
+                                    </form>
+                                    <% } %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mt-5">
+                        <img src="https://res.cloudinary.com/dzex6ikkr/image/upload/v1614751084/YelpCamp/versus_kfec9g.jpg"
+                            class="card-img-top mt-5" alt="no image">
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="https://res.cloudinary.com/dzex6ikkr/image/upload/v1614752583/YelpCamp/red2_mt2ikm.jpg"
+                                class="card-img-top" alt="no image" style="height: 270px">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%=vote.candidate2.toUpperCase()%>
+                                </h5>
+                                <p class="card-text">
+                                    <%=vote.desc2%>
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Start Time = <%=date%></small>
+                                <% if(!isVoted) { %>
+                                    <form action="/<%=vote._id%>/2?_method=PUT" method="POST">
+                                        <button class="button btn-primary">Vote</button>
+                                    </form>
+                                    <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
